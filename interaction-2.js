@@ -102,8 +102,8 @@ function playAudio() {
     if (audioContext.state === 'suspended') {
         return;
     }
-    dspNode.setParamValue("/bells/rumble", 1)
-    setTimeout(() => { dspNode.setParamValue("/bells/rumble", 0) }, 100);
+    dspNode.setParamValue("/bells/gain", 1)
+    setTimeout(() => { dspNode.setParamValue("/bells/gain", 0) }, 100);
 }
 
 //==========================================================================================
