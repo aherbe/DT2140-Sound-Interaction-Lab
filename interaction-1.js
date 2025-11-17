@@ -27,20 +27,38 @@ if (typeof module === "undefined") {
 
 // The name should be the same as the WASM file, so change tuono with brass if you use brass.wasm
 //tuono.createDSP(audioContext, 1024)
+// mysound.createDSP(audioContext, 1024)
+//     .then(node => {
+//         dspNode = node;
+//         dspNode.connect(audioContext.destination);
+//         console.log('params: ', dspNode.getParams());
+//         const jsonString = dspNode.getJSON();
+//         jsonParams = JSON.parse(jsonString)["ui"][0]["items"];
+//         dspNodeParams = jsonParams
+//         dspNode.setParamValue("/mysound/gain", 0)
+//         // const exampleMinMaxParam = findByAddress(dspNodeParams, "/thunder/rumble");
+//         // // ALWAYS PAY ATTENTION TO MIN AND MAX, ELSE YOU MAY GET REALLY HIGH VOLUMES FROM YOUR SPEAKERS
+//         // const [exampleMinValue, exampleMaxValue] = getParamMinMax(exampleMinMaxParam);
+//         // console.log('Min value:', exampleMinValue, 'Max value:', exampleMaxValue);
+//     });
 mysound.createDSP(audioContext, 1024)
     .then(node => {
         dspNode = node;
         dspNode.connect(audioContext.destination);
-        console.log('params: ', dspNode.getParams());
+
+        console.log('params: ', dspNode.getParams()); // 👈 lägg märke till detta
+
         const jsonString = dspNode.getJSON();
         jsonParams = JSON.parse(jsonString)["ui"][0]["items"];
-        dspNodeParams = jsonParams
-        dspNode.setParamValue("/mysound/gain", 0)
-        // const exampleMinMaxParam = findByAddress(dspNodeParams, "/thunder/rumble");
-        // // ALWAYS PAY ATTENTION TO MIN AND MAX, ELSE YOU MAY GET REALLY HIGH VOLUMES FROM YOUR SPEAKERS
-        // const [exampleMinValue, exampleMaxValue] = getParamMinMax(exampleMinMaxParam);
-        // console.log('Min value:', exampleMinValue, 'Max value:', exampleMaxValue);
+        dspNodeParams = jsonParams;
+
+        // Försök tysta ALLA parametrar till deras min-värde
+        const params = dspNode.getParams();
+        params.forEach(p => {
+            dspNode.setParamValue(p.address, p.min);
+        });
     });
+
 
 
 //==========================================================================================
